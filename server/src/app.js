@@ -54,13 +54,15 @@ class App {
 
   fetchCredentials() {
     if (
-      !fs.existsSync("/etc/ssl/private/thesanad_com.pem") ||
-      !fs.existsSync("/etc/ssl/certs/thesanad.com.crt")
+      !fs.existsSync("/etc/ssl/private/mytherapysense.pem") ||
+      !fs.existsSync("/etc/ssl/certs/mytherapysense.com.crt")
     ) {
       return false;
     }
-    const privateKey = fs.readFileSync("/etc/ssl/private/thesanad_com.pem");
-    const certificate = fs.readFileSync("/etc/ssl/certs/thesanad.com.crt");
+    const privateKey = fs.readFileSync("/etc/ssl/private/mytherapysense.pem");
+    const certificate = fs.readFileSync(
+      "/etc/ssl/certs/mytherapysense.com.crt"
+    );
     return { key: privateKey, cert: certificate };
   }
 }
