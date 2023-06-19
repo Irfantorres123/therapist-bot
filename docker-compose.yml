@@ -16,6 +16,8 @@ services:
     volumes:
       - /etc/ssl/certs/:/etc/ssl/certs
       - /etc/ssl/private/:/etc/ssl/private
+      - logs:/var/logs/therapist
+      - ./logs:/root/.npm/_logs/
     depends_on:
       - mongo
     networks:
