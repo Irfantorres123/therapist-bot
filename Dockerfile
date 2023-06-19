@@ -34,4 +34,9 @@ ENV PORT 8080
 
 EXPOSE 8080
 
-CMD ["npm", "start"]
+RUN mkdir /var/logs
+RUN mkdir /var/logs/therapist
+RUN touch /var/logs/therapist/main.log
+RUN touch /var/logs/therapist/error.log
+
+CMD ["npm", "run","deploy"]

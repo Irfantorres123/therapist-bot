@@ -4,7 +4,6 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
-require("dotenv").config();
 var usersRouter = require("./routes/users");
 
 const CLIENT_BUILD_PATH = path.join(__dirname, "../client/build");

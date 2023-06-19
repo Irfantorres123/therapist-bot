@@ -1,0 +1,38 @@
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: calc(100vh - 3rem);
+  padding: 20px;
+}
+
+.loginFormContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.username {
+  width: 220px;
+  height: 2.5rem;
+  border-radius: 5px;
+  border: solid 1px rgb(104, 0, 195);
+}
+
+.password {
+  width: 220px;
+  height: 2.5rem;
+  border-radius: 5px;
+  border: solid 1px rgb(104, 0, 195);
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 4rem;
+}

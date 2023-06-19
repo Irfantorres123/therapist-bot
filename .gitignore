@@ -1,0 +1,3 @@
+.mongoenv
+*.code-workspace
+.vscode

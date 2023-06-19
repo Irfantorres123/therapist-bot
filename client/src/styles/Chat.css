@@ -1,0 +1,12 @@
+.messageInput {
+  border-radius: 14px;
+  background: linear-gradient(145deg, #191919, #1e1e1e);
+  box-shadow: 17px 17px 30px #131313, -17px -17px 30px #252525;
+}
+
+@media (max-width: 768px) {
+  .messageInput {
+    width: 100%;
+    border-radius: 0;
+  }
+}
