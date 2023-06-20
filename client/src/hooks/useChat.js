@@ -9,7 +9,7 @@ export function useChat() {
   const [onLoadingCallback, setOnLoadingCallback] = useState(() => () => {});
   const initialize = async () => {
     onLoadingCallback(true);
-    const res = await fetch("/api/createChat", {
+    const res = await fetch("/api/getChat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export function useChat() {
       }
     }
   };
-  const sendMessage = async (message, temperature = 0) => {
+  const sendMessage = async (message, temperature = 0, stream = false) => {
     setMessages((prevMessages) => [
       ...prevMessages,
       { role: "user", content: message },
@@ -77,8 +77,21 @@ export function useChat() {
       },
       body: JSON.stringify({ content: message, chatId, temperature }),
     })
-      .then(processChunkedResponse)
+      .then(
+        stream
+          ? processChunkedResponse
+          : async (res) => {
+              return { status: res.status, json: await res.json() };
+            }
+      )
       .then(async (message) => {
+        console.log(message);
+        if (!stream) {
+          if (message.status !== 200) {
+            throw new Error("An error occured");
+          }
+          message = message.json.content;
+        }
         onLoadingCallback(false);
         setMessages((prevMessages) => [
           ...prevMessages,

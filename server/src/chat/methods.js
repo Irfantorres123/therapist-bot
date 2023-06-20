@@ -1,4 +1,4 @@
-const Chat = require("../models/chat.js");
+const { ChatModel: Chat, ChatMessageModel } = require("../models/chat.js");
 async function getChat(chatId, userId) {
   return chatId && userId
     ? await Chat.findOne({ _id: chatId, user: userId }).exec()
@@ -10,15 +10,22 @@ async function createChat(userId) {
 }
 
 async function addMessage(chatId, userId, message) {
-  return await Chat.updateOne(
-    { _id: chatId, user: userId },
-    { $push: { messages: message } }
-  ).exec();
+  return await ChatMessageModel.create({
+    chat: chatId,
+    user: userId,
+    role: message.role,
+    content: message.content,
+  });
 }
 
-async function findNewChat(userId) {
-  //Find chats which have lesser than 3 messages
-  return await Chat.findOne({ user: userId, messages: { $size: 4 } }).exec();
+async function getAllMessages(chatId) {
+  return await ChatMessageModel.find({ chat: chatId })
+    .sort({ createdAt: 1 })
+    .exec();
 }
 
-module.exports = { getChat, createChat, addMessage, findNewChat };
+async function findChat(userId) {
+  return await Chat.findOne({ user: userId }).exec();
+}
+
+module.exports = { getChat, createChat, addMessage, findChat, getAllMessages };

@@ -12,16 +12,19 @@ import {
   Box,
   Container,
   Slider,
+  Switch,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "../../hooks/useChat";
 import { TSlider } from "../TSlider";
+import { TSwitch } from "../TSwitch";
 export default function Chat({ data }) {
   const chat = useChat();
   const inputRef = useRef(null);
   const theme = useTheme();
+  const [streaming, setStreaming] = useState(false);
   const [loading, setLoading] = useState(false);
   const [temperature, setTemperature] = useState(0.5);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -110,7 +113,7 @@ export default function Chat({ data }) {
             attachDisabled
             disabled={loading}
             onSend={(message) => {
-              chat.sendMessage(message, temperature);
+              chat.sendMessage(message, temperature, streaming);
             }}
             ref={inputRef}
             className="messageInput"
@@ -143,6 +146,13 @@ export default function Chat({ data }) {
           max={1}
           step={0.01}
           sx={{ width: "80%", marginBottom: "1rem" }}
+        />
+        <TSwitch
+          label="Streaming"
+          value={streaming}
+          onChange={(e) => setStreaming(e.target.checked)}
+          color="secondary"
+          sx={{ marginBottom: "1rem" }}
         />
       </Box>
     </Box>

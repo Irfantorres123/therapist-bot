@@ -3,23 +3,6 @@ const { Schema } = mongoose;
 
 const chatSchema = new Schema(
   {
-    messages: [
-      {
-        role: {
-          type: String,
-          enum: ["user", "assistant", "system", "function"],
-          default: "user",
-        },
-        content: {
-          type: String,
-          required: true,
-        },
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -28,4 +11,30 @@ const chatSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Chat", chatSchema);
+const chatMessageSchema = new Schema(
+  {
+    chat: {
+      type: Schema.Types.ObjectId,
+      ref: "Chat",
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    role: {
+      type: String,
+      enum: ["user", "assistant", "system", "function"],
+      default: "user",
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const ChatModel = mongoose.model("Chat", chatSchema);
+const ChatMessageModel = mongoose.model("ChatMessage", chatMessageSchema);
+
+module.exports = { ChatModel, ChatMessageModel };

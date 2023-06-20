@@ -9,7 +9,7 @@ const path = require("path");
 const { initializeAdmin } = require("./config/init.js");
 const { log } = require("./logger/log.js");
 const winston = require("winston");
-const expressWinston = require("express-winston");
+import expressWinston from "express-winston";
 const { createWriteStream } = require("fs");
 const router = require("./routes/index.js");
 const adminRouter = require("./routes/admin.js");
@@ -100,6 +100,8 @@ app.use(
       "originalUrl",
       "query",
     ],
+    meta: true,
+    dynamicMeta: (req: express.Request, res: express.Response) => req.log,
   })
 );
 const ErrorRequestHandler = (
@@ -113,7 +115,7 @@ const ErrorRequestHandler = (
     log(stack[0], "\n", stack.length > 1 ? stack[1] : "");
     res.status(err.statusCode).json({
       errorName: err.name,
-      error: err.message,
+      error: err.message.split(":")[0],
     });
   } catch (e) {
     res.status(500).json({

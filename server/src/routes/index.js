@@ -7,8 +7,10 @@ const {
   getChat,
   addMessage,
   createChat,
-  findNewChat,
+  findChat,
+  getAllMessages,
 } = require("../chat/methods");
+const { stream } = require("../chat/middleware");
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -19,18 +21,18 @@ router.get("/csrf", (req, res, next) => {
   try {
     res.json({ csrf: req.csrfToken() });
   } catch (err) {
-    next(createError(500, `Error while getting csrf:`));
+    next(createError(500, `Error while getting csrf:  ${err.message}`));
   }
 });
-router.post("/createChat", authenticate, async (req, res, next) => {
+router.post("/getChat", authenticate, async (req, res, next) => {
   try {
-    let newChat = await findNewChat(req.user._id);
-    if (newChat) {
-      res.json({ chatId: newChat._id });
+    let existingChat = await findChat(req.user._id);
+    if (existingChat) {
+      res.json({ chatId: existingChat._id });
       return;
     }
     let chat = await createChat(req.user._id);
-    chat.messages = [
+    let messages = [
       {
         role: "system",
         content:
@@ -59,62 +61,55 @@ router.post("/createChat", authenticate, async (req, res, next) => {
           "They are struggling with anxiety from class and go through mood swings and are hoping that you can help them. Use the above information to help relate to them and make conversations more engaging",
       },
     ];
-    await chat.save();
+    for (let i = 0; i < messages.length; i++) {
+      await addMessage(chat._id, req.user._id, messages[i]);
+    }
     res.json({ chatId: chat._id });
   } catch (err) {
-    next(createError(500, `Error while creating chat:`));
+    next(createError(500, `Error while creating chat:  ${err.message}`));
   }
 });
 router.post("/sendMessage", authenticate, async (req, res, next) => {
   try {
+    let chatId = req.body.chatId;
     let message = { role: "user", content: req.body.content };
-    await addMessage(req.body.chatId, req.user._id, message);
-    let chat = await getChat(req.body.chatId, req.user._id);
-    let messages = chat.messages.map((message) => {
-      return { content: message.content, role: message.role };
+    await addMessage(chatId, req.user._id, message);
+    let chat = await getChat(chatId, req.user._id);
+    let messages = await getAllMessages(chatId);
+    messages = messages.map((message) => {
+      return {
+        role: message.role,
+        content: message.content,
+      };
     });
-    let response = Buffer.from("");
-    let resultStream = await openai.createChatCompletion(
+    let result = await openai.createChatCompletion(
       {
         model: "gpt-3.5-turbo-0613",
         messages: messages,
-        stream: true,
+        stream: req.body.stream ? true : false,
         temperature: req.body.temperature || 0.5,
       },
-      { responseType: "stream" }
+      { responseType: req.body.stream ? "stream" : "text" }
     );
 
-    resultStream.data.on("data", async (result) => {
-      response += result;
-      res.write(result);
-    });
-    resultStream.data.on("error", (err) => {
-      next(createError(500, `Error while sending message: `));
-    });
-    resultStream.data.on("end", async () => {
-      response = response.toString();
-      text = "";
-      response
-        .split("\n")
-        .filter((line) => line.trim() !== "")
-        .forEach((line) => {
-          line = line.slice(5);
-          if (line.trim() === "[DONE]") return;
-          JSON.parse(line).choices.forEach((choice) => {
-            if (choice.index === 0) {
-              if (choice.finish_reason === "stop") {
-                return;
-              }
-              text += choice.delta.content;
-            }
-          });
-        });
-      let message = { role: "assistant", content: text };
-      await addMessage(chat._id, req.user._id, message);
-      res.end();
-    });
+    if (req.body.stream) {
+      stream(req, chat, result.data, res);
+    } else {
+      res.json({ content: result.data.choices[0].message.content });
+      next();
+    }
   } catch (err) {
-    next(createError(500, `Error while sending message:`));
+    req.log = {
+      usage: err.data?.usage,
+      email: req.user.email,
+      rate: {
+        remainingTokens: (err.headers || {})["x-ratelimit-remaining-tokens"],
+        remainingRequests: (err.headers || {})[
+          "x-ratelimit-remaining-requests"
+        ],
+      },
+    };
+    next(createError(500, `Error while sending message: ${err.message}`));
   }
 });
 
