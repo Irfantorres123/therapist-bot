@@ -50,7 +50,7 @@ export function useChat() {
               if (choice.finish_reason === "stop") {
                 return;
               }
-              text += choice.delta.content;
+              text += choice.delta.content || "";
             }
           });
         });
