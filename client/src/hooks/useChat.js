@@ -75,7 +75,7 @@ export function useChat() {
         "X-CSRF-Token": csrf,
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ content: message, chatId, temperature }),
+      body: JSON.stringify({ content: message, chatId, temperature, stream }),
     })
       .then(
         stream
@@ -85,7 +85,6 @@ export function useChat() {
             }
       )
       .then(async (message) => {
-        console.log(message);
         if (!stream) {
           if (message.status !== 200) {
             throw new Error("An error occured");
@@ -105,6 +104,7 @@ export function useChat() {
       .catch((err) => {
         onLoadingCallback(false);
         setStreamingMessage((prev) => "");
+        console.log(err, stream);
         showSnackbar("An error occured", "error");
       });
   };
