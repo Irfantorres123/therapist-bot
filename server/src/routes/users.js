@@ -43,7 +43,13 @@ router.post("/register", validateEmailAndPassword, async (req, res, next) => {
 
 router.post("/login", validateCredentials, async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const user = req.user;
+    let jwt = generateJwt({
+      name: user.name,
+      email: user.email,
+      isAdmin: false,
+    });
+    res.json({ token: jwt });
   } catch (err) {
     next(createError(500, `Error while logging in: ${err.message}`));
   }

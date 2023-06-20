@@ -84,7 +84,7 @@ router.post("/sendMessage", authenticate, async (req, res, next) => {
     });
     let result = await openai.createChatCompletion(
       {
-        model: "gpt-3.5-turbo-0613",
+        model: process.env.LANGUAGE_MODEL,
         messages: messages,
         stream: req.body.stream ? true : false,
         temperature: req.body.temperature || 0.5,
