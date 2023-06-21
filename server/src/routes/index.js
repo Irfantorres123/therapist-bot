@@ -69,9 +69,27 @@ router.post("/getChat", authenticate, async (req, res, next) => {
     next(createError(500, `Error while creating chat:  ${err.message}`));
   }
 });
+
+router.post("/getMessages", authenticate, async (req, res, next) => {
+  try {
+    let { chatId } = req.body;
+    let chat = await getChat(chatId, req.user._id);
+    if (!chat) {
+      res.json({ messages: [] });
+      return;
+    }
+    let messages = await getAllMessages(chatId);
+    res.json({
+      messages,
+    });
+  } catch (err) {
+    next(createError(500, `Error while getting messages:  ${err.message}`));
+  }
+});
+
 router.post("/sendMessage", authenticate, async (req, res, next) => {
   try {
-    let chatId = req.body.chatId;
+    let { chatId } = req.body;
     let message = { role: "user", content: req.body.content };
     await addMessage(chatId, req.user._id, message);
     let chat = await getChat(chatId, req.user._id);
@@ -95,7 +113,14 @@ router.post("/sendMessage", authenticate, async (req, res, next) => {
     if (req.body.stream) {
       stream(req, chat, result.data, res);
     } else {
-      res.json({ content: result.data.choices[0].message.content });
+      const message = await addMessage(chatId, req.user._id, {
+        role: "assistant",
+        content: result.data.choices[0].message.content,
+      });
+      res.json({
+        content: result.data.choices[0].message.content,
+        id: message._id,
+      });
       next();
     }
   } catch (err) {

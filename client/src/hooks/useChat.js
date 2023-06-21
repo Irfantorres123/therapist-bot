@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 export function useChat() {
@@ -112,5 +112,28 @@ export function useChat() {
   const onLoading = (callback) => {
     setOnLoadingCallback(() => callback);
   };
+  const fetchHistory = async () => {
+    const res = await fetch("/api/getMessages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrf,
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ chatId }),
+    });
+    if (res.status !== 200) {
+      showSnackbar("An error occured while fetching history", "error");
+      return;
+    }
+    const data = await res.json();
+    setMessages((messages) => [...messages, ...data.messages]);
+  };
+  useEffect(() => {
+    if (chatId) {
+      fetchHistory();
+    }
+  }, [chatId]);
+
   return { sendMessage, onLoading, messages, streamingMessage, initialize };
 }

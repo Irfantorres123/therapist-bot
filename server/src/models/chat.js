@@ -13,6 +13,11 @@ const chatSchema = new Schema(
 
 const chatMessageSchema = new Schema(
   {
+    feedback: {
+      type: String,
+      enum: ["positive", "negative", "neutral"],
+      default: "neutral",
+    },
     chat: {
       type: Schema.Types.ObjectId,
       ref: "Chat",
