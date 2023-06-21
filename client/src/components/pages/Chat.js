@@ -112,7 +112,7 @@ export default function Chat({ data }) {
             autoFocus
             attachDisabled
             disabled={loading}
-            onSend={(message) => {
+            onSend={(html, message) => {
               chat.sendMessage(message, temperature, streaming);
             }}
             ref={inputRef}
