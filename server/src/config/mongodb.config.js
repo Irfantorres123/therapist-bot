@@ -21,7 +21,7 @@ async function connect(path) {
   const { MONGO_DB, MONGO_PORT, MONGO_USER, MONGO_PASSWORD } = process.env;
   let { MONGO_HOSTNAME } = process.env;
   if (process.env.PRODUCTION === undefined) {
-    MONGO_HOSTNAME = "192.168.0.163";
+    MONGO_HOSTNAME = process.env.LOCAL_ADDRESS;
   }
   // mongoose options
   const options = {
