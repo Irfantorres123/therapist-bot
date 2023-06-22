@@ -5,8 +5,8 @@ var db = connect(
 db = db.getSiblingDB("therapist"); // we can not use "use" statement here to switch db
 
 db.createUser({
-  user: "irfan",
-  pwd: "38588a61be6857203996fda8a158bbae",
+  user: process.env.MONGO_NEW_USERNAME,
+  pwd: process.env.MONGO_NEW_PASSWORD,
   roles: [{ role: "root", db: "admin" }],
   passwordDigestor: "server",
 });
