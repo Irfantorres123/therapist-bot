@@ -10,4 +10,4 @@ function getInitialPrompt(name) {
         Use the above information to help relate to them and make conversations more engaging.`;
 }
 
-export default getInitialPrompt;
+module.exports = { getInitialPrompt };
