@@ -79,7 +79,13 @@ export default function Chat({ data }) {
                   }}
                 >
                   <Message.CustomContent className="message">
-                    <Box display="flex" flexDirection="column">
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      sx={{
+                        padding: "0.6em 0.9em",
+                      }}
+                    >
                       <Typography variant="h6" minWidth="75px" lineHeight="1">
                         {message.content}
                       </Typography>

@@ -4,6 +4,10 @@
   box-shadow: 17px 17px 30px #131313, -17px -17px 30px #252525;
 }
 
+.cs-message__content {
+  padding: 0;
+}
+
 @media (max-width: 768px) {
   .messageInput {
     width: 100%;
