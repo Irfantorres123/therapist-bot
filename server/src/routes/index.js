@@ -11,7 +11,7 @@ const {
   getAllMessages,
 } = require("../chat/methods");
 const { stream } = require("../chat/middleware");
-const { default: getInitialPrompt } = require("../chat/prompt");
+const { getInitialPrompt } = require("../chat/prompt");
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
