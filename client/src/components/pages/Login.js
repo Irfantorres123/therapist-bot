@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useOutletContext } from "react-router-dom";
 import "../../styles/Login.css";
-import Grid from "@mui/material/Grid";
 
 import {
   FormAlternateOption,
@@ -9,7 +8,7 @@ import {
   FormContainer,
   FormTextField,
 } from "../FormElements";
-import { Typography } from "@mui/material";
+import { Typography, Fade, useMediaQuery, useTheme } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { Box } from "@mui/system";
 import { EmailBox } from "../EmailBox";
@@ -21,8 +20,9 @@ export default function Login() {
   let { csrf, onAuthenticate, showSnackbar, authenticated } =
     useOutletContext();
   const [resetBoxOpen, setResetBoxOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [email, setEmail] = useState("");
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
   let location = useLocation();
   location.state = location.state || {};
   let { redirectPath, queryParams } = location.state;
@@ -65,40 +65,65 @@ export default function Login() {
       </div>
     );
   return (
-    <FormContainer
-      title="Sign In"
-      onSubmit={handleSubmit}
-      className="loginFormContainer"
-    >
-      <FormTextField
-        id="email"
-        label="Email Address"
-        name="email"
-        autoComplete="email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        autoFocus
-      />
-      <FormTextField
-        name="password"
-        label="Password"
-        type="password"
-        id="password"
-        autoComplete="current-password"
-      />
-      {/*           <FormControlLabel
+    <Box display="flex" flexDirection={sm ? "column" : "row"}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        sx={{ flexGrow: "0.4" }}
+        height={sm ? "20%" : "inherit"}
+      >
+        <Typography
+          alignItems="center"
+          variant="h4"
+          fontSize={sm ? "1.5rem" : "3rem"}
+          sx={{ color: "white", mb: "0.5rem" }}
+        >
+          Welcome to TherapySense
+        </Typography>
+        <Fade in={true} timeout={2000}>
+          <Typography variant="h6" alignItems="center" sx={{ color: "white" }}>
+            A journey towards mental wellness
+          </Typography>
+        </Fade>
+      </Box>
+      <FormContainer
+        title="Sign In"
+        onSubmit={handleSubmit}
+        className="loginFormContainer"
+        sx={{ flexGrow: "0.6" }}
+      >
+        <FormTextField
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          autoFocus
+        />
+        <FormTextField
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+        />
+        {/*           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           /> */}
-      <LoginWithGoogle />
-      <FormAlternateOption
-        label="Don't have an account?"
-        buttonLabel="Sign Up"
-        onClick={() => {
-          navigate("/register");
-        }}
-      />
-      <FormButton text="Sign In" disabled={resetBoxOpen} />
-    </FormContainer>
+        <LoginWithGoogle />
+        <FormAlternateOption
+          label="Don't have an account?"
+          buttonLabel="Sign Up"
+          onClick={() => {
+            navigate("/register");
+          }}
+        />
+        <FormButton text="Sign In" disabled={resetBoxOpen} />
+      </FormContainer>
+    </Box>
   );
 }
