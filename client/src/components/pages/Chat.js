@@ -9,8 +9,8 @@ import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import { useTheme } from "@emotion/react";
 import "../../styles/Chat.css";
 
-import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 // import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 // import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import {
@@ -25,6 +25,7 @@ import { useEffect, useRef, useState } from "react";
 import { useChat } from "../../hooks/useChat";
 import { TSlider } from "../TSlider";
 import { TSwitch } from "../TSwitch";
+import { Feedback } from "../Feedback";
 export default function Chat({ data }) {
   const chat = useChat();
   const inputRef = useRef(null);
@@ -45,21 +46,18 @@ export default function Chat({ data }) {
     if (!loading) inputRef.current.focus();
   }, [loading]);
 
-
-
   //function to provide the appropriate icons!
-  function setIcons(direction)
-  {
+  function setIcons(direction) {
     //hidden={(direction != "incoming"? 'hidden': '')}
-    if (direction === "incoming") 
-        {
-          var uniqueid= "id" + Math.random().toString(16).slice(2); //create unique id
-          var tU= uniqueid+"thumbup";
-          var tD= uniqueid+"thumbdown";
+    if (direction === "incoming") {
+      var uniqueid = "id" + Math.random().toString(16).slice(2); //create unique id
+      var tU = uniqueid + "thumbup";
+      var tD = uniqueid + "thumbdown";
 
-          return (<div id="feedback" ><ThumbUpAltIcon className="ThumbIcons" id={tU} onClick={()=>thumbtoggle(tU)}></ThumbUpAltIcon> <ThumbDownAltIcon className="ThumbIcons" id={tD} onClick={()=>thumbtoggle(tD)}> </ThumbDownAltIcon></div>);}
-
+      return <Feedback />;
+    }
   }
+  console.log(chat.messages);
 
   return (
     <Box width="100%" height={`calc(100vh -  70px)`} display="flex">
@@ -91,8 +89,6 @@ export default function Chat({ data }) {
             {(chat.messages || []).map((message, index) => {
               const direction =
                 message.role === "user" ? "outgoing" : "incoming";
-                var thumbsup=false;
-                var thumbsdown=false;
               return (
                 <Message
                   key={index}
@@ -113,22 +109,8 @@ export default function Chat({ data }) {
                       <Typography variant="h6" minWidth="75px" lineHeight="1">
                         {message.content}
                       </Typography>
-                      {/* type here */}
 
-
-                      {/* <div hidden={(direction != "incoming"? 'hidden': '')}>
-                      <ThumbUpOffAltIcon className="ThumbIcons"></ThumbUpOffAltIcon>
-                      <ThumbDownOffAltIcon className="ThumbIcons"> </ThumbDownOffAltIcon>
-                      </div> */}
-
-                      {setIcons(direction)}
-                      
-
-
-                       {/* {console.log(direction != "incoming"? "visible" : "hidden") } */}
-                      {/* <ThumbDownAltIcon> </ThumbDownAltIcon> */}
-                      {/* {setIcons()}  */}
-                      
+                      {direction === "incoming" && <Feedback />}
                     </Box>
                   </Message.CustomContent>
                 </Message>
@@ -206,24 +188,4 @@ export default function Chat({ data }) {
 }
 export function chatLoader() {
   return null;
-  return fetch("/api/chat");
 }
-
-function thumbtoggle(ele)
-  {
-   var element=document.getElementById(ele);
-    if (element !=null)
-    {
-      if (element.style.opacity != '1')
-      {element.style.opacity = '1';}
-      else
-      {
-        element.style.opacity = '0.3';
-      }
-    }
-    else
-    {
-      console.log("why is it null???");
-    }
-  }
-  

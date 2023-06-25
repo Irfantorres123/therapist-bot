@@ -25,6 +25,9 @@ export function useChat() {
     setChatId(data.chatId);
     onLoadingCallback(false);
   };
+  const generateRandomId = () => {
+    return Math.random().toString(16).slice(2);
+  };
   const processChunkedResponse = (response) => {
     var reader = response.body.getReader();
     var decoder = new TextDecoder();
