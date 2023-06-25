@@ -54,6 +54,7 @@ router.post("/getMessages", authenticate, async (req, res, next) => {
       return;
     }
     let messages = await getAllMessages(chatId);
+    messages = messages.filter((message) => message.role !== "system");
     res.json({
       messages,
     });
