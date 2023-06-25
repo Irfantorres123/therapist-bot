@@ -125,8 +125,14 @@ export default function Chat({ data }) {
                   direction: "incoming",
                 }}
               >
-                <Message.CustomContent>
-                  <Box display="flex" flexDirection="column">
+                <Message.CustomContent className="message">
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    sx={{
+                      padding: "0.6em 0.9em",
+                    }}
+                  >
                     <Typography variant="h6" minWidth="75px" lineHeight="1">
                       {chat.streamingMessage}
                     </Typography>

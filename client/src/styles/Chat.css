@@ -8,17 +8,17 @@
   padding: 0;
 }
 
-@media (max-width: 768px) {
-  .messageInput {
-    width: 100%;
-    border-radius: 0;
-  }
-}
-
 .ThumbIcons {
   cursor: pointer;
   margin-right: 15px;
   margin-top: 0.5rem;
   opacity: 0.3;
   /* color: green; */
+}
+
+@media (max-width: 768px) {
+  .messageInput {
+    width: 100%;
+    border-radius: 0;
+  }
 }
