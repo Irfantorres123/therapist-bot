@@ -9,18 +9,9 @@ import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import { useTheme } from "@emotion/react";
 import "../../styles/Chat.css";
 
-import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
-import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 // import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 // import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import {
-  Box,
-  Container,
-  Slider,
-  Switch,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Container, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "../../hooks/useChat";
 import { TSlider } from "../TSlider";
@@ -45,19 +36,6 @@ export default function Chat({ data }) {
   useEffect(() => {
     if (!loading) inputRef.current.focus();
   }, [loading]);
-
-  //function to provide the appropriate icons!
-  function setIcons(direction) {
-    //hidden={(direction != "incoming"? 'hidden': '')}
-    if (direction === "incoming") {
-      var uniqueid = "id" + Math.random().toString(16).slice(2); //create unique id
-      var tU = uniqueid + "thumbup";
-      var tD = uniqueid + "thumbdown";
-
-      return <Feedback />;
-    }
-  }
-  console.log(chat.messages);
 
   return (
     <Box width="100%" height={`calc(100vh -  70px)`} display="flex">

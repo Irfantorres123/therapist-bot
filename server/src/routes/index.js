@@ -65,8 +65,17 @@ router.post("/getMessages", authenticate, async (req, res, next) => {
 
 router.post("/sendMessage", authenticate, async (req, res, next) => {
   try {
-    let { chatId } = req.body;
-    let message = { role: "user", content: req.body.content };
+    let { chatId, greeting } = req.body;
+    let message;
+    if (greeting) {
+      message = {
+        role: "system",
+        content:
+          "The user has returned. greet him and start a conversation based on what you know about him",
+      };
+    } else {
+      message = { role: "user", content: req.body.content };
+    }
     await addMessage(chatId, req.user._id, message);
     let chat = await getChat(chatId, req.user._id);
     let messages = await getAllMessages(chatId);

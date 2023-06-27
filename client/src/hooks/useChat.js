@@ -7,6 +7,12 @@ export function useChat() {
   const [streamingMessage, setStreamingMessage] = useState("");
   const { csrf, authToken, showSnackbar } = useOutletContext();
   const [onLoadingCallback, setOnLoadingCallback] = useState(() => () => {});
+  useEffect(() => {
+    if (chatId) {
+      sendMessage("", 0.5, true, true);
+    }
+  }, [chatId]);
+
   const initialize = async () => {
     onLoadingCallback(true);
     const res = await fetch("/api/getChat", {
@@ -65,7 +71,12 @@ export function useChat() {
       }
     }
   };
-  const sendMessage = async (message, temperature = 0, stream = false) => {
+  const sendMessage = async (
+    message,
+    temperature = 0,
+    stream = false,
+    greeting = false
+  ) => {
     setMessages((prevMessages) => [
       ...prevMessages,
       { role: "user", content: message },
@@ -78,7 +89,13 @@ export function useChat() {
         "X-CSRF-Token": csrf,
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ content: message, chatId, temperature, stream }),
+      body: JSON.stringify({
+        content: message,
+        chatId,
+        temperature,
+        stream,
+        greeting,
+      }),
     })
       .then(
         stream
