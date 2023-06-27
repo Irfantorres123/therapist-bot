@@ -21,14 +21,14 @@ export default function Chat({ data }) {
   const chat = useChat();
   const inputRef = useRef(null);
   const theme = useTheme();
-  const [streaming, setStreaming] = useState(false);
+  const [streaming, setStreaming] = useState(true);
   const [loading, setLoading] = useState(false);
   const [temperature, setTemperature] = useState(0.5);
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
   const lg = useMediaQuery(theme.breakpoints.up("md"));
   const main = theme.palette.primary.main;
   const padding = sm ? 0 : 2;
-
+  console.log(chat.messages);
   useEffect(() => {
     chat.onLoading(setLoading);
     chat.initialize();
@@ -141,6 +141,11 @@ export default function Chat({ data }) {
         width="20%"
         height="calc(100% - 2rem)"
         display={lg ? "flex" : "none"}
+      />
+      {/* <Box
+        width="20%"
+        height="calc(100% - 2rem)"
+        display={lg ? "flex" : "none"}
         flexDirection="column"
         alignItems="center"
         sx={{
@@ -166,7 +171,7 @@ export default function Chat({ data }) {
           color="secondary"
           sx={{ marginBottom: "1rem" }}
         />
-      </Box>
+      </Box> */}
     </Box>
   );
 }

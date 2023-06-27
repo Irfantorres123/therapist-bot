@@ -76,7 +76,7 @@ router.post("/sendMessage", authenticate, async (req, res, next) => {
     } else {
       message = { role: "user", content: req.body.content };
     }
-    await addMessage(chatId, req.user._id, message);
+    if (!greeting) await addMessage(chatId, req.user._id, message);
     let chat = await getChat(chatId, req.user._id);
     let messages = await getAllMessages(chatId);
     messages = messages.map((message) => {
