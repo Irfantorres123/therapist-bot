@@ -7,11 +7,6 @@ export function useChat() {
   const [streamingMessage, setStreamingMessage] = useState("");
   const { csrf, authToken, showSnackbar } = useOutletContext();
   const [onLoadingCallback, setOnLoadingCallback] = useState(() => () => {});
-  useEffect(() => {
-    if (chatId) {
-      sendMessage("", 0.5, true, true);
-    }
-  }, [chatId]);
 
   const initialize = async () => {
     onLoadingCallback(true);
@@ -77,10 +72,11 @@ export function useChat() {
     stream = false,
     greeting = false
   ) => {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { role: "user", content: message },
-    ]);
+    if (!greeting)
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: "user", content: message },
+      ]);
     onLoadingCallback(true);
     fetch("/api/sendMessage", {
       method: "POST",
@@ -152,6 +148,7 @@ export function useChat() {
   useEffect(() => {
     if (chatId) {
       fetchHistory();
+      sendMessage("", 0, true, true);
     }
   }, [chatId]);
 

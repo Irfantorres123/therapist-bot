@@ -54,9 +54,17 @@ router.post("/getMessages", authenticate, async (req, res, next) => {
       return;
     }
     let messages = await getAllMessages(chatId);
+    let lastMessageWasGreeting = false;
+    if (
+      messages[messages.length - 1].role === "system" &&
+      messages[messages.length - 1].content.includes("The user has returned")
+    ) {
+      lastMessageWasGreeting = true;
+    }
     messages = messages.filter((message) => message.role !== "system");
     res.json({
       messages,
+      lastMessageWasGreeting,
     });
   } catch (err) {
     next(createError(500, `Error while getting messages:  ${err.message}`));

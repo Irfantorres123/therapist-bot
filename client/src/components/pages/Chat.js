@@ -14,8 +14,6 @@ import "../../styles/Chat.css";
 import { Box, Container, Typography, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "../../hooks/useChat";
-import { TSlider } from "../TSlider";
-import { TSwitch } from "../TSwitch";
 import { Feedback } from "../Feedback";
 export default function Chat({ data }) {
   const chat = useChat();
@@ -28,7 +26,6 @@ export default function Chat({ data }) {
   const lg = useMediaQuery(theme.breakpoints.up("md"));
   const main = theme.palette.primary.main;
   const padding = sm ? 0 : 2;
-  console.log(chat.messages);
   useEffect(() => {
     chat.onLoading(setLoading);
     chat.initialize();
