@@ -10,7 +10,11 @@ import Logout from "./components/pages/Logout";
 import Login from "./components/pages/Login";
 import { blue } from "@mui/material/colors";
 import Register from "./components/pages/Register";
+
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import AboutUs from "./components/pages/AboutUs";
+import Features from "./components/pages/Features";
+import Home from "./components/pages/Home";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const theme = createTheme({
@@ -110,7 +114,7 @@ const themeAlternate = createTheme({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <Root />, //right before change...
     children: [
       {
         path: "services",
@@ -136,6 +140,11 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  {
+    path: "/ana",
+    element: <Home />,
+  }
 ]);
 
 root.render(
