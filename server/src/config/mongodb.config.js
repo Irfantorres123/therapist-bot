@@ -36,10 +36,18 @@ async function connect(path) {
     REMOTE_DB_URL: process.env.MONGODB_URI,
   };
   try {
-    let connection = await mongoose.connect(
-      dbConnectionURL.LOCAL_DB_URL,
-      options
-    );
+    let connection;
+    if(process.env.MONGODB_URI){
+        connection = await mongoose.connect(
+        dbConnectionURL.REMOTE_DB_URL,
+        options
+      );
+    }else{
+       connection = await mongoose.connect(
+        dbConnectionURL.LOCAL_DB_URL,
+        options
+      );
+    }
     return connection.connection;
   } catch (err) {
     log(err);
